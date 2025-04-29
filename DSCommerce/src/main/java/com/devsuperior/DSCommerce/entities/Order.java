@@ -70,6 +70,26 @@ public class Order {
         return items.stream().map(x -> x.getProduct()).toList();
     }
 
+    public User getClient() {
+        return client;
+    }
+
+    public void setClient(User client) {
+        this.client = client;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
+    public void setItems(Set<OrderItem> items) {
+        this.items = items;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
