@@ -45,6 +45,10 @@ public class Category {
         return products;
     }
 
+    public void setProducts(Set<Product> products) {
+        this.products = products;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

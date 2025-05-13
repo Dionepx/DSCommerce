@@ -2,6 +2,7 @@ package com.bootcamp.DSCommerce.entities;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity

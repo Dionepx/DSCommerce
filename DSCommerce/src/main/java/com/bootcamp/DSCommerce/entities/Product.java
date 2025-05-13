@@ -1,11 +1,9 @@
 package com.bootcamp.DSCommerce.entities;
 
+import ch.qos.logback.core.status.StatusManager;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_product")
@@ -15,12 +13,20 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String name;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
     private Double price;
     private String imgUrl;
 
     @OneToMany(mappedBy = "id.product")
     private Set<OrderItem> items = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "tb_product_category",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories = new HashSet<>();
 
     public Product() {}
 
@@ -78,6 +84,18 @@ public class Product {
 
     public List<Order> getOrders() {
         return items.stream().map(x -> x.getOrder()).toList();
+    }
+
+    public void setItems(Set<OrderItem> items) {
+        this.items = items;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
     }
 
     @Override
