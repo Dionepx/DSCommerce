@@ -33,6 +33,9 @@ public class Order {
     @OneToMany(mappedBy = "id.order")
     private Set<OrderItem> items = new HashSet<>();
 
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Payment payment;
+
     public Order() {}
 
     public Order(Long id, Instant moment, OrderStatus status) {
@@ -81,6 +84,26 @@ public class Order {
         return items.stream().map(x -> x.getProduct()).toList();
     }
 
+    public void setClient(User client) {
+        this.client = client;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
+
+    public void setItems(Set<OrderItem> items) {
+        this.items = items;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -92,4 +115,5 @@ public class Order {
     public int hashCode() {
         return Objects.hash(getId(), getMoment(), getStatus());
     }
+
 }
