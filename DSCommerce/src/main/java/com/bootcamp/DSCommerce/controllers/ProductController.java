@@ -2,7 +2,6 @@ package com.bootcamp.DSCommerce.controllers;
 
 import com.bootcamp.DSCommerce.dto.ProductDTO;
 import com.bootcamp.DSCommerce.dto.ProductMinDTO;
-import com.bootcamp.DSCommerce.entities.Product;
 import com.bootcamp.DSCommerce.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
