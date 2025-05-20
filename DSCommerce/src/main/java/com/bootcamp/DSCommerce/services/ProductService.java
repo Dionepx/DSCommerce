@@ -6,7 +6,11 @@ import com.bootcamp.DSCommerce.dto.ProductMinDTO;
 import com.bootcamp.DSCommerce.entities.Category;
 import com.bootcamp.DSCommerce.entities.Product;
 import com.bootcamp.DSCommerce.repositories.ProductRepository;
+import com.bootcamp.DSCommerce.services.exceptions.DatabaseException;
+import com.bootcamp.DSCommerce.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -22,7 +26,9 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
-        Product product = respository.findById(id).orElseThrow();
+        Product product = respository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Recurso nao encontrado")
+        );
         return new ProductDTO(product);
     }
 
@@ -42,15 +48,28 @@ public class ProductService {
 
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
+        try {
         Product entity = respository.getReferenceById(id);
         copyDtoToEntity(dto, entity);
         entity = respository.save(entity);
         return new ProductDTO(entity);
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Recurso nao encontrado");
+        }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
+        if(!respository.existsById(id)) {
+            throw new ResourceNotFoundException("Recurso nao encontrado");
+        }
+        try {
         respository.deleteById(id);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Falha de integridade referecnial");
+        }
     }
 
     public void copyDtoToEntity(ProductDTO dto, Product entity) {
