@@ -3,6 +3,7 @@ package com.bootcamp.DSCommerce.controllers.handlers;
 import com.bootcamp.DSCommerce.dto.CustomErrorDTO;
 import com.bootcamp.DSCommerce.dto.ValidationErrorDTO;
 import com.bootcamp.DSCommerce.services.exceptions.DatabaseException;
+import com.bootcamp.DSCommerce.services.exceptions.ForbiddenException;
 import com.bootcamp.DSCommerce.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -41,4 +42,10 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<CustomErrorDTO> forbidden(ForbiddenException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        ValidationErrorDTO err = new ValidationErrorDTO(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
 }
